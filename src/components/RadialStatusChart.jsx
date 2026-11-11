@@ -1,12 +1,12 @@
 import React from 'react';
 import { RadialBarChart, RadialBar, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 
-export const RadialStatusChart = ({ data, title, type = "iaf" }) => {
+export const RadialStatusChart = ({ data, title }) => {
     return (
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center">
             <h3 className="text-lg font-bold text-slate-800 mb-4">{title}</h3>
             <div className="w-full h-64">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 320, height: 256 }}>
                     <RadialBarChart
                         cx="50%"
                         cy="50%"

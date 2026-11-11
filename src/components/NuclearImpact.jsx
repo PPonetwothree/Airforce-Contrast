@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Radiation, Target, AlertTriangle } from 'lucide-react';
+import { blastRadiusKm, thermalRadiusKm, roundKm } from '../sim/nuclearEffects';
 
+// `hardness` describes how the target responds to an airburst; hardened and buried targets
+// generally require a surface burst and high accuracy, which this airburst model does not cover.
 const targets = [
-    { id: 'tb1', name: 'Strategic Airbase', type: 'Counter-Force', desc: 'Main Bomber Wing HQ', image: '/assets/target_airbase.png' },
-    { id: 'tb2', name: 'Command Bunker', type: 'C4ISR Node', desc: 'Hardened Underground Facility', image: '/assets/target_bunker.png' },
-    { id: 'tb3', name: 'Missile Silo Complex', type: 'Strategic', desc: 'ICBM Launch Site', image: '/assets/target_silo.png' },
-    { id: 'tb4', name: 'Naval Dockyard', type: 'Logistics', desc: 'Carrier Strike Group Port', image: '/assets/target_dockyard.png' },
+    { id: 'tb1', name: 'Strategic Airbase', type: 'Counter-Force', desc: 'Main Bomber Wing HQ', image: '/assets/target_airbase.png', hardness: 'Soft-Medium', note: 'Aircraft in the open and fuel stores are vulnerable well inside the 5 psi ring; hardened shelters are not.' },
+    { id: 'tb2', name: 'Command Bunker', type: 'C4ISR Node', desc: 'Hardened Underground Facility', image: '/assets/target_bunker.png', hardness: 'Very Hard (buried)', note: 'Deeply buried facilities are largely unaffected by airburst overpressure; defeat depends on surface burst, accuracy and depth.' },
+    { id: 'tb3', name: 'Missile Silo Complex', type: 'Strategic', desc: 'ICBM Launch Site', image: '/assets/target_silo.png', hardness: 'Hardened', note: 'Silos are built to withstand overpressures far above 5 psi; kill probability is driven by accuracy (CEP), not these radii.' },
+    { id: 'tb4', name: 'Naval Dockyard', type: 'Logistics', desc: 'Carrier Strike Group Port', image: '/assets/target_dockyard.png', hardness: 'Soft', note: 'Cranes, warehouses and ships alongside are vulnerable across the 5 psi ring; collateral effects on adjacent urban areas are likely.' },
 ];
 
 const yields = [
-    { kt: 15, label: 'Tactical (15kt)', r_blast: 1.5, r_thermal: 3.2, color: 'bg-yellow-500', note: 'Hiroshima Size' },
-    { kt: 100, label: 'Strategic (100kt)', r_blast: 4.8, r_thermal: 8.5, color: 'bg-orange-500', note: 'Standard Warhead' },
-    { kt: 3000, label: 'City Killer (3Mt)', r_blast: 18.0, r_thermal: 45.0, color: 'bg-red-600', note: 'DF-5/Agni-V Class' },
-];
+    { kt: 15, label: 'Tactical (15kt)', note: 'Hiroshima size' },
+    { kt: 100, label: 'Strategic (100kt)', note: 'Typical modern warhead class' },
+    { kt: 3000, label: 'Megaton-class (3Mt)', note: 'DF-5 class (legacy heavy ICBM)' },
+].map(y => ({ ...y, r_blast: roundKm(blastRadiusKm(y.kt)), r_thermal: roundKm(thermalRadiusKm(y.kt)) }));
 
 export const NuclearImpact = ({ iafWarheads, plaafWarheads }) => {
     const [selectedTarget, setSelectedTarget] = useState(targets[0]);
@@ -68,13 +71,16 @@ export const NuclearImpact = ({ iafWarheads, plaafWarheads }) => {
 
                 <div className="mt-8 pt-6 border-t border-slate-800">
                     <div className="flex justify-between text-xs mb-2">
-                        <span className="text-slate-500">IAF Arsenal</span>
+                        <span className="text-slate-500">India (national stockpile)</span>
                         <span className="text-orange-400 font-bold">{iafWarheads} Warheads</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                        <span className="text-slate-500">PLAAF Arsenal</span>
+                        <span className="text-slate-500">China (national stockpile)</span>
                         <span className="text-red-500 font-bold">{plaafWarheads} Warheads</span>
                     </div>
+                    <p className="text-[10px] text-slate-600 mt-3 leading-relaxed">
+                        SIPRI Yearbook 2025 estimates. Totals cover all delivery systems, not air force holdings alone.
+                    </p>
                 </div>
             </div>
 
@@ -101,7 +107,7 @@ export const NuclearImpact = ({ iafWarheads, plaafWarheads }) => {
                     animate={{ width: selectedYield.r_blast * 20, height: selectedYield.r_blast * 20 }} // Scale factor for visual
                     transition={{ type: "spring", stiffness: 50 }}
                 >
-                    <span className="absolute -top-6 text-[10px] text-yellow-500 font-bold whitespace-nowrap">Blast: {selectedYield.r_blast}km</span>
+                    <span className="absolute -top-6 text-[10px] text-yellow-500 font-bold whitespace-nowrap">5 psi blast: {selectedYield.r_blast}km</span>
                 </motion.div>
 
                 <motion.div
@@ -110,7 +116,7 @@ export const NuclearImpact = ({ iafWarheads, plaafWarheads }) => {
                     animate={{ width: selectedYield.r_thermal * 20, height: selectedYield.r_thermal * 20 }}
                     transition={{ type: "spring", stiffness: 40 }}
                 >
-                    <span className="absolute -bottom-6 text-[10px] text-red-500 font-bold whitespace-nowrap">Thermal: {selectedYield.r_thermal}km</span>
+                    <span className="absolute -bottom-6 text-[10px] text-red-500 font-bold whitespace-nowrap">3rd-degree burns: {selectedYield.r_thermal}km</span>
                 </motion.div>
 
                 {/* Impact Stats Overlay */}
@@ -121,18 +127,12 @@ export const NuclearImpact = ({ iafWarheads, plaafWarheads }) => {
                     <div className="space-y-2 text-xs text-slate-300">
                         <div className="flex justify-between">
                             <span>Target Hardness:</span>
-                            <span className="text-white">High (Bunker)</span>
+                            <span className="text-white">{selectedTarget.hardness}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <span>Destruction Prob:</span>
-                            <span className={`${selectedYield.kt > 50 ? 'text-red-500' : 'text-yellow-500'} font-bold`}>
-                                {selectedYield.kt > 50 ? '99.9%' : '45%'}
-                            </span>
-                        </div>
-                        <div className="flex justify-between border-t border-slate-700 pt-2 mt-2">
-                            <span>Casualty Est:</span>
-                            <span className="text-white font-mono">{selectedYield.kt * 350} - {selectedYield.kt * 1200}</span>
-                        </div>
+                        <p className="text-[10px] text-slate-400 leading-relaxed">{selectedTarget.note}</p>
+                        <p className="text-[10px] text-slate-500 leading-relaxed border-t border-slate-700 pt-2 mt-2">
+                            Radii: optimum-height airburst, scaled from Glasstone &amp; Dolan reference values. Casualties depend on population density, burst height, weather and warning time and are not modelled here.
+                        </p>
                     </div>
                 </div>
             </div>

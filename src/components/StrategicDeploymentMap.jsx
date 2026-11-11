@@ -10,7 +10,7 @@ const StrategicDeploymentMap = ({ theater }) => {
 
     // Normalized coordinates for the LAC SVG
     // This is a schematic representation, not a true geographic projection
-    const getBaseCoords = (baseName, side) => {
+    const getBaseCoords = (baseName) => {
         // Schematic mapping for demonstration
         const mappings = {
             "Ngari Gunsa (Ali)": { x: 300, y: 200 },
@@ -46,7 +46,7 @@ const StrategicDeploymentMap = ({ theater }) => {
 
                 {/* IAFF Bases */}
                 {iafBases.map((base, i) => {
-                    const { x, y } = getBaseCoords(base.name, 'iaf');
+                    const { x, y } = getBaseCoords(base.name);
                     return (
                         <g key={`iaf-${base.name}`} onMouseEnter={() => pHoveredBase(base)} onMouseLeave={() => pHoveredBase(null)}>
                             {showRadius && (
@@ -71,7 +71,7 @@ const StrategicDeploymentMap = ({ theater }) => {
 
                 {/* PLAAF Bases */}
                 {plaafBases.map((base, i) => {
-                    const { x, y } = getBaseCoords(base.name, 'plaaf');
+                    const { x, y } = getBaseCoords(base.name);
                     return (
                         <g key={`plaaf-${base.name}`} onMouseEnter={() => pHoveredBase(base)} onMouseLeave={() => pHoveredBase(null)}>
                             {showRadius && (

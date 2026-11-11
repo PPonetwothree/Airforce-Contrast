@@ -1,28 +1,25 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { militaryData } from './data/militaryData';
 import { HeroSection } from './components/HeroSection';
-import { StatCard } from './components/StatCard';
 import { RadialStatusChart } from './components/RadialStatusChart';
-import { BubbleChart } from './components/BubbleChart';
-import { ComparisonChart } from './components/ComparisonChart';
 import { NextGenTechPanel } from './components/NextGenTechPanel';
 import { OrbatMap } from './components/OrbatMap';
 import { InventoryGrid } from './components/InventoryGrid';
 import { NightingaleChart } from './components/NightingaleChart';
 import { StrategicDepthMap } from './components/StrategicDepthMap';
 import { EnvironmentSimulator } from './components/EnvironmentSimulator';
-// import { ScenarioViewer } from './components/ScenarioViewer'; // Replaced by StrategicWargame
-// import { MatchupArena } from './components/MatchupArena'; // Replaced by AircraftComparator
 import { AircraftComparator } from './components/AircraftComparator';
 import { StrategicWargame } from './components/StrategicWargame';
 import { NuclearImpact } from './components/NuclearImpact';
 import { SquadronHangar } from './components/SquadronHangar';
 import { RetentionGraphics } from './components/RetentionGraphics';
 import ExerciseAnalysisModule from './components/ExerciseAnalysisModule';
-import MissionSimulator from './components/MissionSimulator';
 import TrainingAnalyticsModule from './components/TrainingAnalyticsModule';
 import ORBATIntelligenceHub from './components/ORBATIntelligenceHub';
 import { analysisData } from './data/analysisData';
+
+// three.js + react-three-fiber are only needed by the simulator, so load them on demand.
+const MissionSimulator = lazy(() => import('./components/MissionSimulator'));
 
 function App() {
   return (
@@ -44,12 +41,10 @@ function App() {
               <RadialStatusChart
                 title="IAF Personnel Capacity"
                 data={militaryData.personnel.iafBreakdown}
-                type="iaf"
               />
               <RadialStatusChart
                 title="PLAAF Personnel Capacity"
                 data={militaryData.personnel.plaafBreakdown}
-                type="plaaf"
               />
             </div>
 
@@ -57,12 +52,10 @@ function App() {
               <RadialStatusChart
                 title="IAF Command Area (Sq km)"
                 data={militaryData.area.iafBreakdown}
-                type="iaf"
               />
               <RadialStatusChart
                 title="PLAAF Command Area (Sq km)"
                 data={militaryData.area.plaafBreakdown}
-                type="plaaf"
               />
             </div>
           </div>
@@ -74,7 +67,7 @@ function App() {
 
         {/* 2. THEATRE OF OPERATIONS (The Geography) */}
         <section>
-          <StrategicDepthMap data={militaryData.strategicDepth} />
+          <StrategicDepthMap />
         </section>
 
         {/* 3. EXERCISE ANALYSIS (The Activity) */}
@@ -122,7 +115,9 @@ function App() {
           </div>
 
           <h3 className="text-2xl font-bold text-center text-slate-800 pt-8 border-t border-slate-200">Defence Education: Flight Simulation</h3>
-          <MissionSimulator />
+          <Suspense fallback={<div className="h-[600px] rounded-2xl bg-slate-950 flex items-center justify-center text-slate-500 font-mono text-xs uppercase tracking-widest">Loading simulator…</div>}>
+            <MissionSimulator />
+          </Suspense>
 
           <h3 className="text-2xl font-bold text-center text-slate-800 pt-8 border-t border-slate-200">Strategic Deterrence & Escalation</h3>
           <NuclearImpact iafWarheads={militaryData.warheads.iaf} plaafWarheads={militaryData.warheads.plaaf} />

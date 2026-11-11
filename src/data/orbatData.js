@@ -8,8 +8,8 @@ export const orbatData = {
                 bases: [
                     { name: "Ambala", lat: 30.34, lon: 76.82, squadrons: ["No. 17 (Rafale)", "No. 5 (Jaguar)", "No. 224 (Jaguar)"], impact: "Critical Strategic Hub" },
                     { name: "Adampur", lat: 31.43, lon: 75.76, squadrons: ["No. 47 (MiG-29)", "No. 223 (MiG-29)", "No. 14 (Jaguar)"] },
-                    { name: "Srinagar", lat: 33.99, lon: 74.77, squadrons: ["No. 51 (MiG-21 - Retiring)", "Mi-17 Units"], altitude: "1,655m" },
-                    { name: "Pathankot", lat: 32.23, lon: 75.63, squadrons: ["No. 3 (MiG-21 - Retiring)", "Attack Helos"] }
+                    { name: "Srinagar", lat: 33.99, lon: 74.77, squadrons: ["Fighter detachments (MiG-21 retired Sep 2025)", "Mi-17 Units"], altitude: "1,655m" },
+                    { name: "Pathankot", lat: 32.23, lon: 75.63, squadrons: ["Fighter detachments (MiG-21 retired Sep 2025)", "Attack Helos (AH-64E)"] }
                 ]
             },
             {
@@ -17,7 +17,7 @@ export const orbatData = {
                 hq: "Shillong",
                 focus: "LAC / Tibet Frontier",
                 bases: [
-                    { name: "Tezpur", lat: 26.71, lon: 92.78, squadrons: ["No. 102 (Su-30MKI)", "No. 31 (Su-30MKI)"], impact: "Forward Fighter Base" },
+                    { name: "Tezpur", lat: 26.71, lon: 92.78, squadrons: ["No. 2 (Su-30MKI)", "Su-30MKI detachments"], impact: "Forward Fighter Base" },
                     { name: "Hasimara", lat: 26.71, lon: 89.33, squadrons: ["No. 101 (Rafale)"], impact: "Doklam Sector Cover" },
                     { name: "Chabua", lat: 27.48, lon: 95.12, squadrons: ["No. 102 (Su-30MKI)", "Training Units"] },
                     { name: "Bagdogra", lat: 26.68, lon: 88.33, squadrons: ["Tactical Transport", "Forward Detachments"] }

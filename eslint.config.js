@@ -23,7 +23,9 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // ESLint core does not see `<motion.div>` as a use of `motion` (no JSX member-expression
+      // tracking without eslint-plugin-react), so exempt that identifier explicitly.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^([A-Z_]|motion$)', argsIgnorePattern: '^[A-Z_]' }],
     },
   },
 ])

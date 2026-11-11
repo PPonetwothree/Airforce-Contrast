@@ -9,7 +9,6 @@ const TrainingPipelineSankey = ({ data, mode }) => {
             <svg className="w-full h-full" overflow="visible">
                 {data.map((system, systemIndex) => {
                     const nodes = system.nodes;
-                    const isIAF = nodes[0].id === 'applicants' && nodes[0].color.includes('3b82f6');
                     const verticalOffset = mode === 'dual' ? (systemIndex === 0 ? -100 : 100) : 0;
 
                     return (
@@ -17,21 +16,22 @@ const TrainingPipelineSankey = ({ data, mode }) => {
                             {/* Links (Paths) */}
                             {nodes.map((node, i) => {
                                 if (i === nodes.length - 1) return null;
-                                const next = nodes[i + 1];
                                 const x1 = (i / (nodes.length - 1)) * 100 + "%";
                                 const x2 = ((i + 1) / (nodes.length - 1)) * 100 + "%";
                                 const thickness = Math.log10(node.value) * 10;
-                                const nextThickness = Math.log10(next.value) * 10;
 
                                 return (
-                                    <motion.path
+                                    // <line> accepts percentage coordinates; a path `d` does not.
+                                    <motion.line
                                         key={`link-${i}`}
                                         initial={{ pathLength: 0, opacity: 0 }}
                                         animate={{ pathLength: 1, opacity: 0.3 }}
-                                        d={`M ${x1} 0 C ${x1} 0, ${x2} 0, ${x2} 0`} // Simplified for schematic feel
+                                        x1={x1}
+                                        y1={0}
+                                        x2={x2}
+                                        y2={0}
                                         stroke={node.color}
                                         strokeWidth={thickness}
-                                        fill="none"
                                         style={{ vectorEffect: 'non-scaling-stroke' }}
                                     />
                                 );

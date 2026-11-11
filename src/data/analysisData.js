@@ -15,7 +15,6 @@ export const analysisData = {
                 id: "rafale",
                 name: "Rafale",
                 role: "Omnirole",
-                image: "/assets/rafale.png",
                 stats: { bvr: 95, wvr: 95, stealth: 70, tech: 95, payload: 85 },
                 traits: ["Meteor Missile", "SPECTRA EW", "Combat Proven"],
                 desc: "Technologically superior to most non-stealth threats. Key advantage in EW and BVR."
@@ -24,7 +23,6 @@ export const analysisData = {
                 id: "su30",
                 name: "Su-30MKI",
                 role: "Air Dominance",
-                image: "/assets/su30.png",
                 stats: { bvr: 80, wvr: 90, stealth: 40, tech: 75, payload: 95 },
                 traits: ["Thrust Vectoring", "BrahMos", "Huge Radar"],
                 desc: "Kinematic beast. Unmatched in close combat (WVR) but large RCS makes it visible."
@@ -33,7 +31,6 @@ export const analysisData = {
                 id: "mirage",
                 name: "Mirage 2000",
                 role: "Multi-role",
-                image: "/assets/mirage.png",
                 stats: { bvr: 70, wvr: 75, stealth: 50, tech: 70, payload: 65 },
                 traits: ["Precision Strike", "High Alt Exp", "Reliable"],
                 desc: "Aging but lethal. Excellent high-altitude performance and precision."
@@ -42,7 +39,6 @@ export const analysisData = {
                 id: "mig29",
                 name: "MiG-29UPG",
                 role: "Interceptor",
-                image: "/assets/mig29.png",
                 stats: { bvr: 70, wvr: 85, stealth: 45, tech: 65, payload: 60 },
                 traits: ["High T/W Ratio", "Agile", "Interceptor"],
                 desc: "Excellent climber for mountain interception. Short legs (range)."
@@ -51,7 +47,6 @@ export const analysisData = {
                 id: "tejas",
                 name: "Tejas Mk1",
                 role: "LCA",
-                image: "/assets/tejas.png",
                 stats: { bvr: 65, wvr: 70, stealth: 60, tech: 75, payload: 50 },
                 traits: ["Small RCS", "Composites", "Agile"],
                 desc: "Small target, difficult to visually acquire. Limited payload."
@@ -60,7 +55,6 @@ export const analysisData = {
                 id: "jaguar",
                 name: "Jaguar",
                 role: "Ground Attack",
-                image: "/assets/jaguar.png",
                 stats: { bvr: 30, wvr: 40, stealth: 30, tech: 60, payload: 80 },
                 traits: ["Low Level", "Nuclear Capable", "Strike"],
                 desc: "Dedicated striker. Vulnerable in air-to-air."
@@ -71,7 +65,6 @@ export const analysisData = {
                 id: "j20",
                 name: "J-20 Mighty Dragon",
                 role: "Stealth Superiority",
-                image: "/assets/j20.png",
                 stats: { bvr: 98, wvr: 75, stealth: 95, tech: 95, payload: 80 },
                 traits: ["Stealth (LO)", "PL-15 LRAAM", "Sensor Fusion"],
                 desc: "The Apex Predator. Stealth allows it to dictate engagement. WVR capability unproven."
@@ -80,7 +73,6 @@ export const analysisData = {
                 id: "j16",
                 name: "J-16 Hidden Dragon",
                 role: "Strike Heavy",
-                image: "/assets/j16.png",
                 stats: { bvr: 88, wvr: 85, stealth: 45, tech: 85, payload: 95 },
                 traits: ["AESA Radar", "PL-15 + PL-10", "EW Suite"],
                 desc: "China's premier non-stealth fighter. Massive payload and modern avionics."
@@ -89,7 +81,6 @@ export const analysisData = {
                 id: "j10c",
                 name: "J-10C Vigorous Dragon",
                 role: "Multi-role",
-                image: "/assets/j10c.png",
                 stats: { bvr: 80, wvr: 85, stealth: 55, tech: 80, payload: 70 },
                 traits: ["AESA", "PL-15", "Agile"],
                 desc: "Goldeneye of the PLAAF. Modern, agile, and numerous. Threat to any 4th gen."
@@ -98,7 +89,6 @@ export const analysisData = {
                 id: "j11",
                 name: "J-11 Flanker-L",
                 role: "Air Superiority",
-                image: "/assets/j11.png",
                 stats: { bvr: 70, wvr: 80, stealth: 40, tech: 60, payload: 90 },
                 traits: ["Range", "Payload", "Numerous"],
                 desc: "Workhorse Flanker. Capable but avionics lag behind J-16/J-10C."
@@ -107,7 +97,6 @@ export const analysisData = {
                 id: "jh7",
                 name: "JH-7A Flounder",
                 role: "Strike",
-                image: "/assets/jh7.png",
                 stats: { bvr: 40, wvr: 40, stealth: 20, tech: 50, payload: 85 },
                 traits: ["Long Range", "Anti-Ship", "Heavy"],
                 desc: "Dedicated bomber truck. Easy prey for fighters."

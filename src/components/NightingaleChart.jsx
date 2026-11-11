@@ -25,7 +25,7 @@ export const NightingaleChart = () => {
             <p className="text-xs text-slate-400 mb-6 z-10">Multi-axis capability comparison</p>
 
             <div className="w-full h-80 relative z-10">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 640, height: 320 }}>
                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
                         <PolarGrid opacity={0.3} />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 11, fontWeight: 'bold' }} />

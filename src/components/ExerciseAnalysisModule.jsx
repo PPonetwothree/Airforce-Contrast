@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { exerciseData } from '../data/exerciseData';
 import ExerciseMap from './ExerciseMap';
@@ -17,7 +17,6 @@ const ExerciseAnalysisModule = () => {
     const [activeExercise, setActiveExercise] = useState(null);
     const [hoveredExercise, setHoveredExercise] = useState(null);
     const [showHeatmap, setShowHeatmap] = useState(false);
-    const [unlockedAchievements, setUnlockedAchievements] = useState([]);
 
     // Filter logic
     const filteredExercises = useMemo(() => {
@@ -65,11 +64,7 @@ const ExerciseAnalysisModule = () => {
 
                         {/* Achievement Toast Overlay */}
                         <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                            <StrategicAchievementManager
-                                exercises={filteredExercises}
-                                unlocked={unlockedAchievements}
-                                setUnlocked={setUnlockedAchievements}
-                            />
+                            <StrategicAchievementManager exercises={filteredExercises} />
                         </div>
                     </div>
 
