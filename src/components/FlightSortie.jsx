@@ -1,81 +1,61 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Line, Sphere, Trail, Float } from '@react-three/drei';
+import { Line, Sphere, Trail } from '@react-three/drei';
 import * as THREE from 'three';
 import { aircraftPerformance } from '../data/aircraftPerformance';
+import {
+    SORTIE_DURATION_S,
+    effectiveThreatRadius,
+    evaluateSortie,
+    positionAt,
+    threatsInRange,
+} from '../sim/sortieModel';
 
 const FlightSortie = ({ mission, onComplete }) => {
     const assetRef = useRef();
-    const trailRef = useRef();
     const [currentWaypoint, setCurrentWaypoint] = useState(0);
-    const [progress, setProgress] = useState(0);
-    const [detectionLevel, setDetectionLevel] = useState(0);
     const [isDetected, setIsDetected] = useState(false);
 
-    // Performance stats for scoring
-    const sortieStats = useRef({
-        time: 0,
-        fuelConsumption: 0,
-        detectionSpikes: 0,
-        objectiveReached: false
-    });
+    // Mutable per-frame state lives in a ref so the scene is not re-rendered every frame.
+    const sortie = useRef({ time: 0, exposure: 0, waypoint: 0, detected: false, done: false });
 
     const performance = aircraftPerformance[mission.assets[0]] || aircraftPerformance["Rafale"];
+    const rcs = performance.rcs;
 
     useFrame((state, delta) => {
-        if (!mission) return;
+        const s = sortie.current;
+        if (s.done || !assetRef.current) return;
 
-        // Simulate time and flight
-        sortieStats.current.time += delta;
-        setProgress(prev => Math.min(prev + delta * 0.05, 1));
+        s.time += delta;
+        const progress = Math.min(s.time / SORTIE_DURATION_S, 1);
+        const { index, pos, next } = positionAt(mission.waypoints, progress);
 
-        // Simple Waypoint Interp (Analytical Visualization)
-        const waypoints = mission.waypoints;
-        const wpCount = waypoints.length;
-        const totalProgress = progress * (wpCount - 1);
-        const index = Math.floor(totalProgress);
-        const subProgress = totalProgress % 1;
+        assetRef.current.position.set(...pos);
+        assetRef.current.position.y += Math.sin(state.clock.getElapsedTime() * 2) * 0.05;
+        assetRef.current.lookAt(...next);
 
-        if (index < wpCount - 1) {
-            const p1 = new THREE.Vector3(...waypoints[index].pos);
-            const p2 = new THREE.Vector3(...waypoints[index + 1].pos);
-            assetRef.current.position.lerpVectors(p1, p2, subProgress);
-
-            // Look at next point
-            assetRef.current.lookAt(p2);
-
-            if (index > currentWaypoint) setCurrentWaypoint(index);
-        } else {
-            // Sortie complete
-            if (!sortieStats.current.objectiveReached) {
-                sortieStats.current.objectiveReached = true;
-                onComplete({
-                    success: true,
-                    time: sortieStats.current.time,
-                    efficiency: 0.85,
-                    visibility: sortieStats.current.detectionSpikes / 10
-                });
-            }
+        if (index !== s.waypoint) {
+            s.waypoint = index;
+            setCurrentWaypoint(index);
         }
 
-        // Proximity Detection for Radar Cones
-        mission.threats.forEach(threat => {
-            const threatPos = new THREE.Vector3(threat.lat - 25, 0, threat.lng - 70); // Rough mapping for 3D space
-            const dist = assetRef.current.position.distanceTo(threatPos);
-            if (dist < threat.range / 10) { // Scaled distance
-                setDetectionLevel(prev => Math.min(prev + delta * 0.5, 1));
-                if (detectionLevel > 0.8) {
-                    setIsDetected(true);
-                    sortieStats.current.detectionSpikes += 1;
-                }
-            } else {
-                setDetectionLevel(prev => Math.max(prev - delta * 0.2, 0));
-                if (detectionLevel < 0.2) setIsDetected(false);
-            }
-        });
+        // Radar exposure: seconds spent inside any threat envelope (scaled by aircraft RCS).
+        const detected = threatsInRange(mission.threats, pos, rcs).length > 0;
+        if (detected) s.exposure += delta;
+        if (detected !== s.detected) {
+            s.detected = detected;
+            setIsDetected(detected);
+        }
 
-        // Handle "jitter" for realistic feel
-        assetRef.current.position.y += Math.sin(state.clock.getElapsedTime() * 2) * 0.005;
+        if (progress >= 1) {
+            s.done = true;
+            setCurrentWaypoint(mission.waypoints.length - 1);
+            onComplete(evaluateSortie({
+                time: s.time,
+                exposure: s.exposure,
+                maxExposure: mission.constraints.maxExposure,
+            }));
+        }
     });
 
     return (
@@ -100,13 +80,13 @@ const FlightSortie = ({ mission, onComplete }) => {
 
             {/* Threat Zones */}
             {mission.threats.map((threat, i) => (
-                <group key={i} position={[threat.lat - 25, 0, threat.lng - 70]}>
+                <group key={i} position={[threat.scenePos[0], 0, threat.scenePos[1]]}>
                     <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                        <circleGeometry args={[threat.range / 10, 64]} />
+                        <circleGeometry args={[effectiveThreatRadius(threat, rcs), 64]} />
                         <meshBasicMaterial color="#ef4444" transparent opacity={0.05} side={THREE.DoubleSide} />
                     </mesh>
                     <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                        <ringGeometry args={[threat.range / 10 - 0.5, threat.range / 10, 64]} />
+                        <ringGeometry args={[effectiveThreatRadius(threat, rcs) - 0.5, effectiveThreatRadius(threat, rcs), 64]} />
                         <meshBasicMaterial color="#ef4444" transparent opacity={0.2} side={THREE.DoubleSide} />
                     </mesh>
                 </group>

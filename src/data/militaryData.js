@@ -3,7 +3,7 @@ export const militaryData = {
         title: "Total Aircraft Inventory",
         iaf: 1716,
         plaaf: 3304,
-        note: "PLAAF inventory estimated between 3304-3733. IAF active approx 1716.",
+        note: "PLAAF inventory estimated between 3304-3733. IAF active approx 1716 (all types). MiG-21 Bison retired Sep 2025.",
         details: [
             {
                 category: "Stealth / 5th Gen",
@@ -33,7 +33,6 @@ export const militaryData = {
                 category: "Light / Interceptor",
                 iaf: [
                     { name: "Jaguar (Strike)", count: 125 },
-                    { name: "MiG-21 Bison", count: 50 },
                     { name: "Tejas Mk1", count: 32 }
                 ],
                 plaaf: [
@@ -50,9 +49,9 @@ export const militaryData = {
     },
     squadrons: {
         title: "Combat Squadrons",
-        iaf: 31,
+        iaf: 29,
         plaaf: 120, // Estimated based on 25+ frontline brigades x ~30-40 aircraft or equivalent
-        note: "IAF sanctioned 42, actual 31. PLAAF operates 25+ frontline brigades.",
+        note: "IAF sanctioned 42, actual ~29 after the last MiG-21 squadrons retired (Sep 2025). PLAAF operates 25+ frontline brigades.",
         orbat: {
             iaf: [
                 { name: "No. 1 Squadron (Tigers)", ac: "Mirage 2000", base: "Gwalior", lat: 26.29, lng: 78.22, role: "Multi-role" },
@@ -79,10 +78,13 @@ export const militaryData = {
         }
     },
     warheads: {
-        title: "Nuclear Warheads",
-        iaf: 172,
-        plaaf: 500,
-        note: "China projected to have 1000 by 2030.",
+        // National stockpiles (all delivery systems), NOT air-force-specific holdings.
+        // Keys kept as iaf/plaaf for consistency with the rest of this file.
+        title: "Nuclear Warheads (National Stockpile)",
+        iaf: 180,
+        plaaf: 600,
+        source: "SIPRI Yearbook 2025 (estimates as of Jan 2025)",
+        note: "Whole-country totals across land, sea and air legs. China projected to exceed 1000 by 2030 (US DoD).",
     },
     missiles: {
         title: "Missile Arsenal",

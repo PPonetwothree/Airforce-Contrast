@@ -89,11 +89,11 @@ const TacticalHUD = ({ mission, onAbort }) => {
                         <div className="space-y-1">
                             <div className="flex justify-between text-[10px]">
                                 <span className="text-slate-500">Track</span>
-                                <span className="text-red-400">NOMINAL</span>
+                                <span className="text-red-400">{mission.threats.length} EMITTER{mission.threats.length === 1 ? '' : 'S'}</span>
                             </div>
                             <div className="flex justify-between text-[10px]">
                                 <span className="text-slate-500">Search</span>
-                                <span className="text-slate-300">HQ-9_S300</span>
+                                <span className="text-slate-300">{mission.threats.map(t => t.name).join(' / ')}</span>
                             </div>
                         </div>
                     </div>

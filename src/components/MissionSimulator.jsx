@@ -2,7 +2,6 @@ import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Stars, Sky } from '@react-three/drei';
 import { AnimatePresence, motion } from 'framer-motion';
-import { missionData } from '../data/missionData';
 import BriefingRoom from './BriefingRoom';
 import FlightSortie from './FlightSortie';
 import TacticalHUD from './TacticalHUD';
@@ -32,7 +31,7 @@ const MissionSimulator = () => {
                 <div className="mb-12">
                     <div className="flex items-center gap-3">
                         <div className="h-px w-8 bg-red-600/50" />
-                        <span className="text-xs font-mono tracking-widest text-red-500 uppercase">Classified Training Environment</span>
+                        <span className="text-xs font-mono tracking-widest text-red-500 uppercase">Unclassified // Open-Source Training Environment</span>
                     </div>
                     <h2 className="text-4xl font-light tracking-tight text-white mt-2">
                         Flight <span className="font-bold text-slate-400">Mission Simulator</span>

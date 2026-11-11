@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Plane, ShieldCheck, Wrench, Info, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,18 +18,27 @@ export const SquadronHangar = () => {
         <div className="w-full relative">
             <div className="overflow-x-auto pb-12 pt-4 px-4 snap-x snap-mandatory scrollbar-hide">
                 <div className="flex gap-6 w-max">
-                    {squadrons.map((sq, idx) => (
+                    {squadrons.map((sq) => (
                         <motion.div
                             key={sq.id}
                             layoutId={`card-${sq.id}`}
-                            className="w-80 h-96 relative rounded-3xl overflow-hidden snap-center group cursor-pointer"
+                            className="w-80 h-96 relative rounded-3xl overflow-hidden snap-center group cursor-pointer focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400"
                             whileHover={{ scale: 1.05, rotateY: 5 }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
                             onClick={() => setSelectedId(sq.id)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setSelectedId(sq.id);
+                                }
+                            }}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Open squadron details: ${sq.name}`}
                         >
                             {/* Card Background */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${sq.color} opacity-90`}></div>
-                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 mix-blend-overlay"></div>
+                            <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0px,rgba(255,255,255,0.06)_2px,transparent_2px,transparent_6px)] opacity-30 mix-blend-overlay"></div>
 
                             {/* Content */}
                             <div className="relative z-10 p-8 h-full flex flex-col justify-between text-white">

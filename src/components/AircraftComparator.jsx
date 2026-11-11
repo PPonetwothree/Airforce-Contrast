@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Swords, Info, Zap, Shield, Radar, Crosshair } from 'lucide-react';
-import { clsx } from 'clsx';
 
 const StatRow = ({ label, left, right, max = 100 }) => (
     <div className="flex items-center gap-4 mb-3">

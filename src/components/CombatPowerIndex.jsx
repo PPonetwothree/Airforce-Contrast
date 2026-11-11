@@ -3,11 +3,37 @@ import { motion } from 'framer-motion';
 import { orbatData } from '../data/orbatData';
 import { Shield, Zap, Wind, AlertTriangle } from 'lucide-react';
 
+// Each side gets its own 0-100 track so neither bar can clip the other.
+const MetricRow = ({ label, iafVal, plaafVal, icon: Icon }) => (
+    <div className="space-y-3">
+        <div className="flex justify-between items-center text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500">
+            <div className="flex items-center gap-2">
+                <Icon size={12} />
+                {label}
+            </div>
+            <div className="flex gap-4">
+                <span className="text-blue-500">IAF: {iafVal}</span>
+                <span className="text-red-500">PLAAF: {plaafVal}</span>
+            </div>
+        </div>
+        {[['bg-blue-600', iafVal], ['bg-red-600', plaafVal]].map(([color, val]) => (
+            <div key={color} className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${val}%` }}
+                    className={`${color} h-full`}
+                />
+            </div>
+        ))}
+    </div>
+);
+
+const composite = (m) => Math.round((m.quantity + m.quality + m.awacs + m.logistics) / 4);
+
 const CombatPowerIndex = ({ theater }) => {
     const currentTheater = orbatData.theaters[theater];
 
-    // Normalized comparison metrics for demonstration
-    // These would ideally be calculated dynamically from dataset
+    // Indicative analyst estimates (0-100 index per factor), not derived from the dataset.
     const metrics = theater === 'ladakh' ? {
         iaf: { quantity: 65, quality: 85, awacs: 40, logistics: 70 },
         plaaf: { quantity: 85, quality: 90, awacs: 80, logistics: 75 }
@@ -15,33 +41,6 @@ const CombatPowerIndex = ({ theater }) => {
         iaf: { quantity: 80, quality: 80, awacs: 50, logistics: 85 },
         plaaf: { quantity: 90, quality: 85, awacs: 85, logistics: 70 }
     };
-
-    const RenderMetric = ({ label, iafVal, plaafVal, icon: Icon }) => (
-        <div className="space-y-3">
-            <div className="flex justify-between items-center text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500">
-                <div className="flex items-center gap-2">
-                    <Icon size={12} />
-                    {label}
-                </div>
-                <div className="flex gap-4">
-                    <span className="text-blue-500">IAF: {iafVal}%</span>
-                    <span className="text-red-500">PLAAF: {plaafVal}%</span>
-                </div>
-            </div>
-            <div className="flex h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${iafVal}%` }}
-                    className="bg-blue-600 h-full border-r border-white/10"
-                />
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${plaafVal}%` }}
-                    className="bg-red-600 h-full opacity-60"
-                />
-            </div>
-        </div>
-    );
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -57,12 +56,12 @@ const CombatPowerIndex = ({ theater }) => {
 
                     <div className="grid grid-cols-2 gap-6">
                         <div className="text-center p-4 bg-black/40 rounded-xl border border-slate-800">
-                            <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">IAF Potential</div>
-                            <div className="text-2xl font-black text-blue-500">{metrics.iaf.quality - 5}%</div>
+                            <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">IAF Composite</div>
+                            <div className="text-2xl font-black text-blue-500">{composite(metrics.iaf)}</div>
                         </div>
                         <div className="text-center p-4 bg-black/40 rounded-xl border border-slate-800">
-                            <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">PLAAF Potential</div>
-                            <div className="text-2xl font-black text-red-500">{metrics.plaaf.quality}%</div>
+                            <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">PLAAF Composite</div>
+                            <div className="text-2xl font-black text-red-500">{composite(metrics.plaaf)}</div>
                         </div>
                     </div>
                 </div>
@@ -79,10 +78,10 @@ const CombatPowerIndex = ({ theater }) => {
             </div>
 
             <div className="space-y-8 py-4">
-                <RenderMetric label="Numerical Strength" iafVal={metrics.iaf.quantity} plaafVal={metrics.plaaf.quantity} icon={Zap} />
-                <RenderMetric label="Technological Parity" iafVal={metrics.iaf.quality} plaafVal={metrics.plaaf.quality} icon={Wind} />
-                <RenderMetric label="C4ISR / AWACS Hubs" iafVal={metrics.iaf.awacs} plaafVal={metrics.plaaf.awacs} icon={Zap} />
-                <RenderMetric label="Logistical Sustainability" iafVal={metrics.iaf.logistics} plaafVal={metrics.plaaf.logistics} icon={Zap} />
+                <MetricRow label="Numerical Strength" iafVal={metrics.iaf.quantity} plaafVal={metrics.plaaf.quantity} icon={Zap} />
+                <MetricRow label="Technological Parity" iafVal={metrics.iaf.quality} plaafVal={metrics.plaaf.quality} icon={Wind} />
+                <MetricRow label="C4ISR / AWACS Hubs" iafVal={metrics.iaf.awacs} plaafVal={metrics.plaaf.awacs} icon={Zap} />
+                <MetricRow label="Logistical Sustainability" iafVal={metrics.iaf.logistics} plaafVal={metrics.plaaf.logistics} icon={Zap} />
 
                 <div className="pt-6 border-t border-slate-800 flex justify-between items-center">
                     <div className="flex gap-4">
@@ -95,7 +94,7 @@ const CombatPowerIndex = ({ theater }) => {
                             <span className="text-[9px] font-mono text-slate-500 uppercase">PLAAF Capability</span>
                         </div>
                     </div>
-                    <div className="text-[9px] font-mono text-slate-700 uppercase">Normalized Score 0-100</div>
+                    <div className="text-[9px] font-mono text-slate-700 uppercase">Indicative index 0-100 · composite = mean of 4</div>
                 </div>
             </div>
         </div>

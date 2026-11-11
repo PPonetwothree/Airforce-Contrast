@@ -13,7 +13,7 @@ export const MapContainer = ({ children, height = "h-96" }) => (
     </div>
 );
 
-export const StrategicDepthMap = ({ data }) => {
+export const StrategicDepthMap = () => {
     return (
         <div className="bg-slate-900 rounded-3xl p-8 relative overflow-hidden text-white shadow-2xl">
             {/* Background Grid */}

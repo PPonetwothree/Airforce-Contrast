@@ -4,6 +4,9 @@ import { Trophy, Clock, ShieldAlert, Zap, ArrowLeft, RefreshCw, BookOpen } from 
 
 const MissionScoreboard = ({ performance, mission, onRestart, onExit }) => {
     const score = performance?.success ? 'MISSION_SUCCESS' : 'MISSION_FAILED';
+    const totalSeconds = Math.round(performance?.time ?? 0);
+    const exposure = performance?.exposure ?? 0;
+    const maxExposure = performance?.maxExposure ?? 0;
 
     return (
         <div className="w-full max-w-4xl bg-[#0a0a0a]/95 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-md">
@@ -12,7 +15,7 @@ const MissionScoreboard = ({ performance, mission, onRestart, onExit }) => {
                 <div className="flex justify-between items-center">
                     <div className="space-y-1">
                         <div className="text-[10px] font-mono text-blue-400 tracking-widest uppercase font-bold">Operational Evaluation Report</div>
-                        <h2 className="text-3xl font-black text-white uppercase tracking-tight">{score}</h2>
+                        <h2 className={`text-3xl font-black uppercase tracking-tight ${performance?.success ? 'text-white' : 'text-red-500'}`}>{score}</h2>
                     </div>
                     <div className="text-right">
                         <div className="text-[10px] text-slate-500 font-mono uppercase">Reference Sortie</div>
@@ -29,38 +32,42 @@ const MissionScoreboard = ({ performance, mission, onRestart, onExit }) => {
                         <div className="text-[10px] text-slate-500 uppercase tracking-widest">Completion Time</div>
                     </div>
                     <div className="text-4xl font-light text-slate-200">
-                        {Math.floor(performance?.time / 60)}:{(performance?.time % 60).toFixed(0).padStart(2, '0')}
+                        {Math.floor(totalSeconds / 60)}:{String(totalSeconds % 60).padStart(2, '0')}
                         <span className="text-xs text-slate-500 ml-2 font-mono">MIN</span>
                     </div>
                     <p className="text-[10px] text-slate-600 leading-relaxed uppercase">
-                        Within the projected operational window for high-intensity engagement.
+                        Simulated replay time for the full route.
                     </p>
                 </div>
 
                 <div className="p-8 space-y-6 bg-white/[0.02]">
                     <div className="flex items-center gap-3">
                         <ShieldAlert className="text-slate-500" size={18} />
-                        <div className="text-[10px] text-slate-500 uppercase tracking-widest">Visibility Index</div>
+                        <div className="text-[10px] text-slate-500 uppercase tracking-widest">Radar Exposure</div>
                     </div>
                     <div className="text-4xl font-light text-slate-200">
-                        {(performance?.visibility * 10).toFixed(1)}
-                        <span className="text-xs text-slate-500 ml-2 font-mono">SIG</span>
+                        {exposure.toFixed(1)}
+                        <span className="text-xs text-slate-500 ml-2 font-mono">/ {maxExposure.toFixed(1)} S</span>
                     </div>
                     <p className="text-[10px] text-slate-600 leading-relaxed uppercase">
-                        {performance?.visibility > 0.5 ? 'EXCESSIVE EXPOSURE TO ADVERSARY SENSORS.' : 'LOW OBSERVABLE PROFILE MAINTAINED.'}
+                        {!performance?.success
+                            ? 'EXPOSURE LIMIT EXCEEDED: SORTIE COMPROMISED BY ADVERSARY SENSORS.'
+                            : performance?.visibility > 0.5
+                                ? 'HIGH EXPOSURE, WITHIN TOLERANCE.'
+                                : 'LOW OBSERVABLE PROFILE MAINTAINED.'}
                     </p>
                 </div>
 
                 <div className="p-8 space-y-6">
                     <div className="flex items-center gap-3">
                         <Zap className="text-slate-500" size={18} />
-                        <div className="text-[10px] text-slate-500 uppercase tracking-widest">Sortie Efficiency</div>
+                        <div className="text-[10px] text-slate-500 uppercase tracking-widest">Time Undetected</div>
                     </div>
                     <div className="text-4xl font-light text-slate-200">
                         {(performance?.efficiency * 100).toFixed(0)}%
                     </div>
                     <p className="text-[10px] text-slate-600 leading-relaxed uppercase">
-                        Energy management and fuel consumption optimal for combat radius.
+                        Share of the sortie flown outside adversary sensor envelopes.
                     </p>
                 </div>
             </div>
@@ -73,9 +80,9 @@ const MissionScoreboard = ({ performance, mission, onRestart, onExit }) => {
                     </div>
                     <div className="space-y-2">
                         <div className="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Intelligence Unlocked</div>
-                        <h4 className="text-lg font-bold text-white uppercase italic">IAF Doctrine: Offensive Counter Air (OCA)</h4>
+                        <h4 className="text-lg font-bold text-white uppercase italic">{mission.lesson?.title}</h4>
                         <p className="text-sm text-slate-500 leading-relaxed max-w-2xl">
-                            Real-world missions like *Tarang Shakti* emphasize the integration of 4.5 Gen fighters (Rafale) with heavy dominance platforms (Su-30MKI). This sortie demonstrates the "High-Low" mix strategy used to suppress advanced A2/AD (Anti-Access/Area Denial) envelopes.
+                            {mission.lesson?.body}
                         </p>
                     </div>
                 </div>

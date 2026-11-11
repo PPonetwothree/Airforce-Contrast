@@ -5,7 +5,7 @@ import { Shield, Target, Map as MapIcon, ChevronRight } from 'lucide-react';
 
 const BriefingRoom = ({ onSelectMission }) => {
     return (
-        <div className="w-full h-full flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center">
+        <div className="w-full h-full flex items-center justify-center bg-[radial-gradient(ellipse_at_top,#1e293b_0%,#020617_70%)]">
             <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
             <div className="relative z-10 w-full max-w-5xl px-8 py-12 flex flex-col md:flex-row gap-12">
@@ -22,7 +22,16 @@ const BriefingRoom = ({ onSelectMission }) => {
                                 key={mission.id}
                                 whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.05)' }}
                                 onClick={() => onSelectMission(mission)}
-                                className="p-6 border border-slate-700/50 bg-black/40 rounded-lg cursor-pointer transition-all group relative overflow-hidden"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        onSelectMission(mission);
+                                    }
+                                }}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`Launch sortie: ${mission.name}`}
+                                className="p-6 border border-slate-700/50 bg-black/40 rounded-lg cursor-pointer transition-all group relative overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="space-y-1">

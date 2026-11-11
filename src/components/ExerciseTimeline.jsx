@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 
 const ExerciseTimeline = ({ exercises, activeExercise, setActiveExercise, hoveredExercise, setHoveredExercise }) => {

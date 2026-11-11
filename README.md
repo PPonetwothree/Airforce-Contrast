@@ -1,16 +1,35 @@
-# React + Vite
+# Airforce Contrast: IAF vs PLAAF
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, open-source comparison of the Indian Air Force (IAF) and the People's Liberation Army Air Force (PLAAF): force structure, basing and geography, exercises, training pipelines, and a set of illustrative simulations.
 
-Currently, two official plugins are available:
+**Unclassified.** Everything here is compiled from public sources (IISS *Military Balance*, SIPRI Yearbook, US DoD *China Military Power Report*, official releases). Figures for the PLAAF in particular are estimates; treat every number as indicative.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting started
 
-## React Compiler
+```bash
+npm install
+npm run dev       # local dev server
+npm run build     # production build in dist/
+npm run lint      # ESLint
+npm test          # unit tests (Vitest)
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Layout
 
-## Expanding the ESLint configuration
+| Path | Contents |
+| --- | --- |
+| `src/App.jsx` | Page composition (single scrolling page) |
+| `src/components/` | UI sections and visualisations |
+| `src/data/` | Static datasets (inventory, ORBAT, exercises, training, missions) |
+| `src/sim/` | Pure, unit-tested model code used by the simulations |
+| `public/assets/` | Map and target imagery (self-hosted, no external requests) |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Models and their limits
+
+- **Flight mission simulator** (`src/sim/sortieModel.js`): an aircraft flies a fixed waypoint route. Each threat has a nominal detection range against a 1 m² target, scaled by the aircraft's radar cross-section to the ¼ power (radar range equation). Time spent inside any envelope counts as exposure; a sortie fails if exposure exceeds the mission's limit. RCS values are rough public estimates.
+- **Deterrence panel** (`src/sim/nuclearEffects.js`): 5 psi blast and third-degree-burn radii for an optimum-height airburst, scaled from Glasstone & Dolan 15 kt reference values (cube-root scaling for blast, about yield^0.41 for thermal effects). It does not estimate casualties or kill probability against hardened targets.
+- **Combat power index, wargame, aircraft comparator**: hand-entered analyst estimates and scripted scenarios for discussion. They are not outputs of a campaign model.
+
+## Data currency
+
+Datasets reflect public reporting up to 2025. Notable updates: the IAF's MiG-21 fleet retired in September 2025, bringing fighter strength to about 29 squadrons. Warhead figures are national stockpiles (SIPRI 2025), not air force holdings.

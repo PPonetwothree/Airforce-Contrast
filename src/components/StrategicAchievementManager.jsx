@@ -35,18 +35,27 @@ const achievements = [
     }
 ];
 
-const StrategicAchievementManager = ({ exercises, unlocked, setUnlocked }) => {
+const StrategicAchievementManager = ({ exercises }) => {
+    const [unlocked, setUnlocked] = useState([]);
     const [toast, setToast] = useState(null);
 
+    // Unlock every newly satisfied achievement in a single update, adjusting state during
+    // render (https://react.dev/learn/you-might-not-need-an-effect). The previous effect called
+    // setUnlocked once per achievement with a stale list, so simultaneous unlocks overwrote each other.
+    const newlyUnlocked = achievements.filter(
+        ach => !unlocked.includes(ach.id) && ach.requirement(exercises)
+    );
+    if (newlyUnlocked.length > 0) {
+        setUnlocked([...unlocked, ...newlyUnlocked.map(ach => ach.id)]);
+        setToast(newlyUnlocked[newlyUnlocked.length - 1]);
+    }
+
+    // Auto-dismiss the toast, cancelling the timer if it changes or the component unmounts.
     useEffect(() => {
-        achievements.forEach(ach => {
-            if (!unlocked.includes(ach.id) && ach.requirement(exercises)) {
-                setUnlocked([...unlocked, ach.id]);
-                setToast(ach);
-                setTimeout(() => setToast(null), 5000);
-            }
-        });
-    }, [exercises, unlocked, setUnlocked]);
+        if (!toast) return;
+        const timer = setTimeout(() => setToast(null), 5000);
+        return () => clearTimeout(timer);
+    }, [toast]);
 
     return (
         <div className="relative">

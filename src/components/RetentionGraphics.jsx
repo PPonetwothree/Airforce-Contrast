@@ -6,7 +6,7 @@ export const RetentionGraphics = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2500);
+        const timer = setTimeout(() => setLoading(false), 900);
         return () => clearTimeout(timer);
     }, []);
 
@@ -18,18 +18,19 @@ export const RetentionGraphics = () => {
                     <motion.div
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        onClick={() => setLoading(false)}
                         className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center font-mono"
                     >
                         <div className="w-64 h-2 bg-slate-800 rounded-full mb-4 overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: "100%" }}
-                                transition={{ duration: 2, ease: "easeInOut" }}
+                                transition={{ duration: 0.8, ease: "easeInOut" }}
                                 className="h-full bg-emerald-500"
                             />
                         </div>
                         <div className="text-emerald-500 text-xs tracking-[0.3em] animate-pulse">
-                            ESTABLISHING SECURE UPLINK...
+                            LOADING OPEN-SOURCE DATA...
                         </div>
                         <div className="mt-8 grid grid-cols-2 gap-4 opacity-50">
                             {[...Array(4)].map((_, i) => (
